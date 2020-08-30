@@ -1,0 +1,37 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<h3>WCL 日志列表</h3>
+<p> <a href="/service/loadreport/">登记日志(无需上传日志文件，只需要输入日志code)</a>
+{% if logs %}
+<table class="table table-striped">
+
+    <tbody>
+    <tr>
+        <td>日志code</td>
+        <td>日志标题</td>
+        <td>整体耗时</td>
+        <td>登记时间</td>
+        <td>解读日志</td>
+    </tr>
+    {% for log in logs %}
+    <tr>
+        <!-- Option 1 <td><a href="{{ file.file.url }}/">{{ file.file.url }}</a></td> -->
+        <td>{{ log.code }}</a></td>
+        <td>{{ log.title }}</td>
+        <td>{{ log.total_time }}</td>
+        <td>{{ log.format_upload_time }}</td>
+<!--        <td><a class="btn btn-info" href="/file/parse/{{ file.id }}" role="button">Parse</a></td>-->
+        <td><a class="btn btn-info" href="/service/log_detail/{{ log.id }}" role="button">解读</a></td>
+        <!-- <td><a class="btn btn-info"></a>Parse</td> -->
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p align="center" style="color:green;font-size:20px" >No log loaded yet. Please click
+    to upload files.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+<h3>{{ log_name }}</h3>
+<div>
+    <a href={{ log_url }}>wcl链接</a>
+</div>
+
+{% if log_detail_list %}
+<table class="table">
+    <tbody>
+    <tr>
+        <td>项目</td>
+        <td>任务运行标志</td>
+        <td>运行解读任务</td>
+        <td>解读结果</td>
+    </tr>
+    {% for log_detail in log_detail_list %}
+    <tr>
+        <td>{{ log_detail.detail_name }}</td>
+        {% if log_detail.scan_flag %}
+        <td>已解读</td>
+        <td><a class="btn btn-danger disabled" href={{ log_detail.detail_scan_url }} role="button">解读</a></td>
+        {% else %}
+        <td>未解读</td>
+        <td><a class="btn btn-danger" href={{ log_detail.detail_scan_url }} role="button">解读</a></td>
+        {% endif %}
+        <td><a class="btn btn-info" href={{ log_detail.detail_info_url }} role="button">查看</a></td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>暂时还未开放相关解读项目，加速开发中...</p>
+{% endif %}
+
+{% endblock %}

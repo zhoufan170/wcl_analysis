@@ -1,0 +1,57 @@
+{% extends "file_upload/base.html" %}
+
+{% block content %}
+<h1>小软毒箭伤害排名</h1>
+
+{% if viscidus_poison_tick_list %}
+    {% for viscidus_poison_tick in viscidus_poison_tick_list %}
+    {% if viscidus_poison_tick.kill%}
+    <h3>战斗编号:{{ viscidus_poison_tick.fight_id }} 击杀成功</h3>
+    {% else %}
+    <h3>战斗编号:{{ viscidus_poison_tick.fight_id }} 击杀失败</h3>
+    {% endif %}
+    <table class="table">
+        <tbody>
+        <tr>
+            <td>ID</td>
+            <td>毒箭伤害量</td>
+            <td>被击中</td>
+            <td>debuff生效次数</td>
+            <td>debuff持续时间</td>
+        </tr>
+        {% for tick in viscidus_poison_tick.data %}
+            {% if tick.tick > 10 %}
+            <tr bgcolor="#FF0000">
+                <td>{{ tick.name }}</td>
+                <td>{{ tick.damage }}</td>
+                <td>{{ tick.hit }}</td>
+                <td>{{ tick.tick }}</td>
+                <td>{{ tick.uptime }}%</td>
+            </tr>
+            {% elif tick.tick > 5 %}
+            <tr bgcolor=#E6FF33">
+                <td>{{ tick.name }}</td>
+                <td>{{ tick.damage }}</td>
+                <td>{{ tick.hit }}</td>
+                <td>{{ tick.tick }}</td>
+                <td>{{ tick.uptime }}%</td>
+            </tr>
+            {% else %}
+            <tr bgcolor=#3399FF">
+                <td>{{ tick.name }}</td>
+                <td>{{ tick.damage }}</td>
+                <td>{{ tick.hit }}</td>
+                <td>{{ tick.tick }}</td>
+                <td>{{ tick.uptime }}%</td>
+            </tr>
+            {% endif %}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endfor %}
+
+{% else %}
+<p>No Data yet. Please check .</p>
+{% endif %}
+
+{% endblock %}

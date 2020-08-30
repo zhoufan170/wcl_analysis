@@ -1,0 +1,51 @@
+{% extends "file_upload/base.html" %}
+
+{% block content %}
+<h3>小软毒箭伤害排名</h3>
+
+{% if poisonDatas %}
+<table class="table">
+
+    <tbody>
+    <tr>
+        <td>ID</td>
+        <td>毒箭伤害量</td>
+        <td>被击中</td>
+        <td>debuff生效次数</td>
+        <td>debuff持续时间</td>
+    </tr>
+    {% for poison in poisonDatas %}
+        {% if poison.tick > 10 %}
+        <tr bgcolor="#FF0000">
+            <td>{{ poison.username }}</td>
+            <td>{{ poison.amount }}</td>
+            <td>{{ poison.hit }}</td>
+            <td>{{ poison.tick }}</td>
+            <td>{{ poison.uptime }}%</td>
+        </tr>
+        {% elif poison.tick > 5 %}
+        <tr bgcolor=#E6FF33">
+            <td>{{ poison.username }}</td>
+            <td>{{ poison.amount }}</td>
+            <td>{{ poison.hit }}</td>
+            <td>{{ poison.tick }}</td>
+            <td>{{ poison.uptime }}%</td>
+        </tr>
+        {% else %}
+        <tr bgcolor=#3399FF">
+            <td>{{ poison.username }}</td>
+            <td>{{ poison.amount }}</td>
+            <td>{{ poison.hit }}</td>
+            <td>{{ poison.tick }}</td>
+            <td>{{ poison.uptime }}%</td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    </tbody>
+</table>
+
+{% else %}
+<p>No Data yet. Please check .</p>
+{% endif %}
+
+{% endblock %}
