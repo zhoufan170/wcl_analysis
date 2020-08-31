@@ -21,11 +21,12 @@
         {% if log_detail.scan_flag %}
         <td>已解读</td>
         <td><a class="btn btn-danger disabled" href={{ log_detail.detail_scan_url }} role="button">解读</a></td>
+        <td><a class="btn btn-info" href={{ log_detail.detail_info_url }} role="button">查看</a></td>
         {% else %}
         <td>未解读</td>
         <td><a class="btn btn-danger" href={{ log_detail.detail_scan_url }} role="button">解读</a></td>
+        <td><a class="btn btn-info disabled" href={{ log_detail.detail_info_url }} role="button">查看</a></td>
         {% endif %}
-        <td><a class="btn btn-info" href={{ log_detail.detail_info_url }} role="button">查看</a></td>
     </tr>
     {% endfor %}
     </tbody>
