@@ -40,7 +40,8 @@ class TaqService():
 
             entries = result.get("entries")
             if len(entries) == 0:
-                return False, 'no poison data in log or parms error'
+                continue
+                # return False, 'no poison data in log or parms error'
 
             for entry in entries:
                 total = entry.get("total", 0)
