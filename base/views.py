@@ -76,11 +76,43 @@ def log_detail(request, *args, **kwargs):
     return render(request, 'base/log_detail.html', content)
 
 
-def viscidus_poison_tick_detail(request, *args, **kwargs):
+def viscidus_poison_tick_info(request, *args, **kwargs):
     log_id = kwargs.get("log_id")
     viscidus_poison_tick_list, msg = TaqService.get_viscidus_poison_tick_detail(log_id=log_id)
     content = {
         "viscidus_poison_tick_list": viscidus_poison_tick_list
     }
     return render(request, 'base/viscidus_poison_tick.html', content)
+
+
+def scan_boss_nature_protection(request, *args, **kwargs):
+    log_id = kwargs.get("log_id")
+    log_obj, msg = BaseService.get_wcl_log_by_id(log_id=log_id)
+    if not log_obj:
+        return render(request, 'base/error.html', {'error': msg})
+    scan_flag = log_obj.scan_flag
+    scan_flag_dict = json.loads(scan_flag)
+    if CONSTANT_SERVICE.BOSS_NATURE_PROTECTION in scan_flag_dict.keys():
+        if scan_flag_dict.get(CONSTANT_SERVICE.BOSS_NATURE_PROTECTION) == 1:
+            # 已经做过了boss战自然抗检测，跳转日志详情页面（暂时还没做，先跳转service首页）
+            return redirect('/service/')
+
+    # 还没做过检测
+    success, msg = TaqService.nature_protection_summary(log_id=log_id)
+    if not success:
+        return render(request, 'base/error.html', {'error': msg})
+    scan_flag_dict[CONSTANT_SERVICE.BOSS_NATURE_PROTECTION] = 1
+    log_obj.scan_flag = json.dumps(scan_flag_dict)
+    log_obj.save()
+
+    return redirect('/service/')
+
+
+def boss_nature_protection_info(request, *args, **kwargs):
+    log_id = kwargs.get("log_id")
+    boss_nature_protection_list, msg = TaqService.get_boss_nature_protection_detail(log_id=log_id)
+    content = {
+        "boss_nature_protection_list": boss_nature_protection_list
+    }
+    return render(request, 'base/boss_nature_protection.html', content)
 

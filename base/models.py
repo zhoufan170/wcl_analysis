@@ -50,6 +50,12 @@ class Friendly(models.Model):
     type = models.CharField(blank=True, null=True, max_length=50, verbose_name="职业")
     server = models.CharField(blank=True, null=True, max_length=50, verbose_name="服务器")
 
+    def is_melee(self):
+        if self.type in ('Warrior', 'Rogue'):
+            return True
+        else:
+            return False
+
 
 class Enemy(models.Model):
     log = models.ForeignKey(WCLLog, on_delete=models.CASCADE)
@@ -69,7 +75,8 @@ class LogDetail():
 
 
 class TemplateData():
-    def __init__(self, fight_id, kill, data):
+    def __init__(self, fight_id, fight_name, kill, data):
         self.fight_id = fight_id
+        self.fight_name = fight_name
         self.kill = kill
         self.data = data

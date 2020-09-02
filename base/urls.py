@@ -1,6 +1,7 @@
 from django.urls import re_path, path
 from file_upload import views
-from base.views import load_report, log_detail, log_list, scan_viscidus_poison_tick, viscidus_poison_tick_detail
+from base.views import load_report, log_detail, log_list, scan_viscidus_poison_tick, viscidus_poison_tick_info,\
+    scan_boss_nature_protection, boss_nature_protection_info
 
 # namespace
 app_name = "file_upload"
@@ -37,5 +38,9 @@ urlpatterns = [
     # scan task
     re_path(r'^scan_viscidus_poison_tick/(?P<log_id>\d+)$', view=scan_viscidus_poison_tick, name='scan_viscidus_poison_tick'),
 
-    re_path(r'^viscidus_poison_tick_info/(?P<log_id>\d+)$', view=viscidus_poison_tick_detail, name='viscidus_poison_tick_detail'),
+    re_path(r'^viscidus_poison_tick_info/(?P<log_id>\d+)$', view=viscidus_poison_tick_info, name='viscidus_poison_tick_info'),
+
+    re_path(r'^scan_boss_nature_protection/(?P<log_id>\d+)$', view=scan_boss_nature_protection, name='scan_boss_nature_protection'),
+
+    re_path(r'^boss_nature_protection_info/(?P<log_id>\d+)$', view=boss_nature_protection_info, name='boss_nature_protection_info'),
 ]

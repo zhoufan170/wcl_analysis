@@ -89,15 +89,29 @@ class BaseService():
 
     @classmethod
     def get_fight_list(cls, log_id, name):
+        '''
+        根据boss查找战斗列表
+        :param log_id:
+        :param name:
+        :return:
+        '''
         log_obj, msg = cls.get_wcl_log_by_id(log_id=log_id)
         if not log_obj:
             return None, msg
-
-        fight_list = Fight.objects.filter(log=log_obj, name=name)
+        if isinstance(name, list):
+            fight_list = Fight.objects.filter(log=log_obj, name__in=name)
+        else:
+            fight_list = Fight.objects.filter(log=log_obj, name=name)
         return fight_list, ''
 
     @classmethod
     def get_friendly_by_id(cls, friendly_id, log_id):
+        '''
+        根据id查找友方目标
+        :param friendly_id:
+        :param log_id:
+        :return:
+        '''
         log_obj, msg = cls.get_wcl_log_by_id(log_id=log_id)
         if not log_obj:
             return None, msg
@@ -137,3 +151,21 @@ class BaseService():
             log_detail_list.append(log_detail)
 
         return log_detail_list, ''
+
+    @classmethod
+    def get_enemy_by_name(cls, log_id, name):
+        '''
+        根据name查找敌对目标
+        :param log_id:
+        :param name:
+        :return:
+        '''
+        log_obj, msg = cls.get_wcl_log_by_id(log_id=log_id)
+        if not log_obj:
+            return None, msg
+
+        enemy_obj = Enemy.objects.filter(log=log_obj, name=name).first()
+        if not enemy_obj:
+            return None, 'enemy: %s not exist' % name
+
+        return enemy_obj, ''

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from service.constant import CONSTANT_SERVICE
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -23,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '1ai#)@_az=1a-zwtlq4e4#m#@*^84w#qp&!r+7&822ns_6^70d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -132,5 +133,13 @@ WCL_API_KEY = '9c1df9ffb7dabbf2651007275f1da40a'
 WCL_SCHEMA = 'https://cn.classic.warcraftlogs.com'
 
 DETAIL_LIST = [
-    ["viscidus_poison_tick", '维度希斯毒箭伤害统计', "/scan_viscidus_poison_tick/", '/viscidus_poison_tick_info/']
+    ["viscidus_poison_tick", '维度希斯毒箭伤害统计', "/scan_viscidus_poison_tick/", '/viscidus_poison_tick_info/'],
+    ["boss_nature_protection", 'BOSS战自然防护药水破案', "/scan_boss_nature_protection/", '/boss_nature_protection_info/'],
+]
+
+TAQ_NATURE_PROTECTION_BOSS_LIST = [
+    CONSTANT_SERVICE.Viscidus_name,
+    CONSTANT_SERVICE.Hururan_name,
+    CONSTANT_SERVICE.Ouro_name,
+    CONSTANT_SERVICE.Cthun_name,
 ]
