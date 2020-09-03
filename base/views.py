@@ -5,6 +5,7 @@ from base.models import WCLLog
 from service.constant import CONSTANT_SERVICE
 import json
 from service.taq_service import TaqService
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 
@@ -35,7 +36,17 @@ def submit_load(request, *args, **kwargs):
 
 def log_list(request):
     logs = WCLLog.objects.all().order_by("-id")
-    return render(request, 'base/log_list.html', {'logs': logs})
+    paginator = Paginator(logs, 10)
+    page = request.GET.get('page', 1)
+    try:
+        contacts = paginator.page(page)
+    except PageNotAnInteger:
+        # 如果请求的页数不是整数，返回第一页。
+        contacts = paginator.page(1)
+    except EmptyPage:
+        # 如果请求的页数不在合法的页数范围内，返回结果的最后一页。
+        contacts = paginator.page(paginator.num_pages)
+    return render(request, 'base/log_list.html', {'logs': contacts})
 
 
 def scan_viscidus_poison_tick(request, *args, **kwargs):

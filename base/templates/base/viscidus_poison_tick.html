@@ -5,49 +5,65 @@
 
 {% if viscidus_poison_tick_list %}
     {% for viscidus_poison_tick in viscidus_poison_tick_list %}
-    {% if viscidus_poison_tick.kill%}
-    <h3>战斗编号:{{ viscidus_poison_tick.fight_id }} 击杀成功</h3>
-    {% else %}
-    <h3>战斗编号:{{ viscidus_poison_tick.fight_id }} 击杀失败</h3>
-    {% endif %}
-    <table class="table">
-        <tbody>
-        <tr>
-            <td>ID</td>
-            <td>毒箭伤害量</td>
-            <td>被击中</td>
-            <td>debuff生效次数</td>
-            <td>debuff持续时间</td>
-        </tr>
-        {% for tick in viscidus_poison_tick.data %}
-            {% if tick.tick > 10 %}
-            <tr bgcolor="#FF0000">
-                <td>{{ tick.name }}</td>
-                <td>{{ tick.damage }}</td>
-                <td>{{ tick.hit }}</td>
-                <td>{{ tick.tick }}</td>
-                <td>{{ tick.uptime }}%</td>
-            </tr>
-            {% elif tick.tick > 5 %}
-            <tr bgcolor=#E6FF33">
-                <td>{{ tick.name }}</td>
-                <td>{{ tick.damage }}</td>
-                <td>{{ tick.hit }}</td>
-                <td>{{ tick.tick }}</td>
-                <td>{{ tick.uptime }}%</td>
-            </tr>
-            {% else %}
-            <tr bgcolor=#3399FF">
-                <td>{{ tick.name }}</td>
-                <td>{{ tick.damage }}</td>
-                <td>{{ tick.hit }}</td>
-                <td>{{ tick.tick }}</td>
-                <td>{{ tick.uptime }}%</td>
-            </tr>
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+          <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+            {% if viscidus_poison_tick.kill %}
+                <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse{{ viscidus_poison_tick.fight_id }}" aria-expanded="false" aria-controls="collapseThree">
+                {{ viscidus_poison_tick.fight_name }} 战斗编号:{{ viscidus_poison_tick.fight_id }} 击杀成功
+                </button>
+                {% else %}
+                <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse{{ viscidus_poison_tick.fight_id }}" aria-expanded="false" aria-controls="collapseThree">
+                {{ viscidus_poison_tick.fight_name }} 战斗编号:{{ viscidus_poison_tick.fight_id }} 击杀失败
+                </button>
             {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
+          </h2>
+        </div>
+      </div>
+      <div id="collapse{{ viscidus_poison_tick.fight_id }}" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>ID</td>
+                    <td>毒箭伤害量</td>
+                    <td>被击中</td>
+                    <td>debuff生效次数</td>
+                    <td>debuff持续时间</td>
+                </tr>
+                {% for tick in viscidus_poison_tick.data %}
+                    {% if tick.tick > 10 %}
+                    <tr bgcolor="#FF0000">
+                        <td>{{ tick.name }}</td>
+                        <td>{{ tick.damage }}</td>
+                        <td>{{ tick.hit }}</td>
+                        <td>{{ tick.tick }}</td>
+                        <td>{{ tick.uptime }}%</td>
+                    </tr>
+                    {% elif tick.tick > 5 %}
+                    <tr bgcolor=#E6FF33">
+                        <td>{{ tick.name }}</td>
+                        <td>{{ tick.damage }}</td>
+                        <td>{{ tick.hit }}</td>
+                        <td>{{ tick.tick }}</td>
+                        <td>{{ tick.uptime }}%</td>
+                    </tr>
+                    {% else %}
+                    <tr bgcolor=#3399FF">
+                        <td>{{ tick.name }}</td>
+                        <td>{{ tick.damage }}</td>
+                        <td>{{ tick.hit }}</td>
+                        <td>{{ tick.tick }}</td>
+                        <td>{{ tick.uptime }}%</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
     {% endfor %}
 
 {% else %}

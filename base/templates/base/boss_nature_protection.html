@@ -2,55 +2,70 @@
 
 {% block content %}
 <h1>BOSS战自然防护统计</h1>
-
 {% if boss_nature_protection_list %}
     {% for boss_nature_protection in boss_nature_protection_list %}
-    {% if boss_nature_protection.kill %}
-    <h3>{{ boss_nature_protection.fight_name }} 战斗编号:{{ boss_nature_protection.fight_id }} 击杀成功</h3>
-    {% else %}
-    <h3>{{ boss_nature_protection.fight_name }} 战斗编号:{{ boss_nature_protection.fight_id }} 击杀失败</h3>
-    {% endif %}
-    <table class="table">
-        <tbody>
-        <tr>
-            <td>ID</td>
-            <td>自然防护药水吸收量</td>
-            <td>战斗中自然防护使用次数</td>
-            <td>强效自然防护药水吸收量</td>
-            <td>战斗中强效自然防护使用次数</td>
-        </tr>
-        {% for data in boss_nature_protection.data %}
-            {% if data.importance == 'L1' %}
-            <tr bgcolor="#FF0000">
-                <td>{{ data.name }}</td>
-                <td>{{ data.nature_protection_absorb }}</td>
-                <td>{{ data.nature_protection_cast }}</td>
-                <td>{{ data.major_nature_protection_absorb }}</td>
-                <td>{{ data.major_nature_protection_cast }}</td>
-            </tr>
-            {% elif data.importance == 'L2' %}
-            <tr bgcolor=#E6FF33">
-                <td>{{ data.name }}</td>
-                <td>{{ data.nature_protection_absorb }}</td>
-                <td>{{ data.nature_protection_cast }}</td>
-                <td>{{ data.major_nature_protection_absorb }}</td>
-                <td>{{ data.major_nature_protection_cast }}</td>
-            </tr>
-            {% else %}
-            <tr bgcolor=#3399FF">
-                <td>{{ data.name }}</td>
-                <td>{{ data.nature_protection_absorb }}</td>
-                <td>{{ data.nature_protection_cast }}</td>
-                <td>{{ data.major_nature_protection_absorb }}</td>
-                <td>{{ data.major_nature_protection_cast }}</td>
-            </tr>
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+            {% if boss_nature_protection.kill %}
+                <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse{{ boss_nature_protection.fight_id }}" aria-expanded="false" aria-controls="collapseThree">
+                {{ boss_nature_protection.fight_name }} 战斗编号:{{ boss_nature_protection.fight_id }} 击杀成功
+                </button>
+                {% else %}
+                <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse{{ boss_nature_protection.fight_id }}" aria-expanded="false" aria-controls="collapseThree">
+                {{ boss_nature_protection.fight_name }} 战斗编号:{{ boss_nature_protection.fight_id }} 击杀失败
+                </button>
             {% endif %}
-        {% endfor %}
-        </tbody>
-    </table>
+          </h2>
+        </div>
+        <div id="collapse{{ boss_nature_protection.fight_id }}" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div class="card-body">
+            <table class="table">
+                <tbody>
+                <tr>
+                    <td>ID</td>
+                    <td>自然防护药水吸收量</td>
+                    <td>战斗中自然防护使用次数</td>
+                    <td>强效自然防护药水吸收量</td>
+                    <td>战斗中强效自然防护使用次数</td>
+                </tr>
+                {% for data in boss_nature_protection.data %}
+                    {% if data.importance == 'L1' %}
+                    <tr bgcolor="#FF0000">
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.nature_protection_absorb }}</td>
+                        <td>{{ data.nature_protection_cast }}</td>
+                        <td>{{ data.major_nature_protection_absorb }}</td>
+                        <td>{{ data.major_nature_protection_cast }}</td>
+                    </tr>
+                    {% elif data.importance == 'L2' %}
+                    <tr bgcolor=#E6FF33">
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.nature_protection_absorb }}</td>
+                        <td>{{ data.nature_protection_cast }}</td>
+                        <td>{{ data.major_nature_protection_absorb }}</td>
+                        <td>{{ data.major_nature_protection_cast }}</td>
+                    </tr>
+                    {% else %}
+                    <tr bgcolor=#3399FF">
+                        <td>{{ data.name }}</td>
+                        <td>{{ data.nature_protection_absorb }}</td>
+                        <td>{{ data.nature_protection_cast }}</td>
+                        <td>{{ data.major_nature_protection_absorb }}</td>
+                        <td>{{ data.major_nature_protection_cast }}</td>
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
     {% endfor %}
-
 {% else %}
+
 <p>No Data yet. Please check .</p>
 {% endif %}
 

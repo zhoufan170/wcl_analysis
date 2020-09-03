@@ -28,7 +28,21 @@
     {% endfor %}
     </tbody>
 </table>
+<div class="pagination">
+    <span class="step-links">
+        {% if logs.has_previous %}
+            <a href="?page={{ contacts.previous_page_number }}">previous</a>
+        {% endif %}
 
+        <span class="current">
+            Page {{ logs.number }} of {{ logs.paginator.num_pages }}.
+        </span>
+
+        {% if logs.has_next %}
+            <a href="?page={{ logs.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
 {% else %}
 <p align="center" style="color:green;font-size:20px" >No log loaded yet. Please click
     to upload files.</p>
