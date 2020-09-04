@@ -151,8 +151,9 @@ class TaqService():
                     total = entry.get("total", 0)
                     uptime = entry.get('uptime', 0)
                     friendly_id = entry.get('id', 0)
-                    total_result_dict[friendly_id]["nature_protection_absorb"] = total
-                    total_result_dict[friendly_id]["nature_protection_uptime"] = round(uptime * 100 / time, 2)
+                    if friendly_id in total_result_dict.keys():
+                        total_result_dict[friendly_id]["nature_protection_absorb"] = total
+                        total_result_dict[friendly_id]["nature_protection_uptime"] = round(uptime * 100 / time, 2)
 
             success, result = WclApiService.get_api(
                 api=CONSTANT_SERVICE.TABLES_API,
@@ -168,7 +169,8 @@ class TaqService():
                 for entry in result.get("entries"):
                     total = entry.get("total", 0)
                     friendly_id = entry.get('id', 0)
-                    total_result_dict[friendly_id]["nature_protection_cast"] = total
+                    if friendly_id in total_result_dict.keys():
+                        total_result_dict[friendly_id]["nature_protection_cast"] = total
 
             # 大自然抗
             params = {
@@ -192,8 +194,9 @@ class TaqService():
                     total = entry.get("total", 0)
                     uptime = entry.get('uptime', 0)
                     friendly_id = entry.get('id', 0)
-                    total_result_dict[friendly_id]["major_nature_protection_absorb"] = total
-                    total_result_dict[friendly_id]["major_nature_protection_uptime"] = round(uptime * 100 / time, 2)
+                    if friendly_id in total_result_dict.keys():
+                        total_result_dict[friendly_id]["major_nature_protection_absorb"] = total
+                        total_result_dict[friendly_id]["major_nature_protection_uptime"] = round(uptime * 100 / time, 2)
 
             success, result = WclApiService.get_api(
                 api=CONSTANT_SERVICE.TABLES_API,
@@ -209,7 +212,8 @@ class TaqService():
                 for entry in result.get("entries"):
                     total = entry.get("total")
                     friendly_id = entry.get('id')
-                    total_result_dict[friendly_id]["major_nature_protection_cast"] = total
+                    if friendly_id in total_result_dict.keys():
+                        total_result_dict[friendly_id]["major_nature_protection_cast"] = total
 
             # import json
             # print(json.dumps(total_result_dict))
