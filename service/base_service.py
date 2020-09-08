@@ -99,9 +99,9 @@ class BaseService():
         if not log_obj:
             return None, msg
         if isinstance(name, list):
-            fight_list = Fight.objects.filter(log=log_obj, name__in=name)
+            fight_list = Fight.objects.filter(log=log_obj, name__in=name, boss__gt=0)
         else:
-            fight_list = Fight.objects.filter(log=log_obj, name=name)
+            fight_list = Fight.objects.filter(log=log_obj, name=name, boss__gt=0)
         return fight_list, ''
 
     @classmethod
