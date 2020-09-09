@@ -137,12 +137,13 @@ class BaseService():
             detail_info_url = detail[3]
             scan_flag_dict = json.loads(log_obj.scan_flag)
             if detail_type in scan_flag_dict.keys():
-                if scan_flag_dict[detail_type] == 1:
-                    scan_flag = True
-                else:
-                    scan_flag = False
+                # if scan_flag_dict[detail_type] == 1:
+                #     scan_flag = True
+                # else:
+                #     scan_flag = False
+                scan_flag = scan_flag_dict[detail_type]
             else:
-                scan_flag = False
+                scan_flag = 0
             log_detail = LogDetail(detail_type=detail_type,
                                    detail_name=detail_name,
                                    detail_scan_url='/service%s%s' % (detail_scan_url, str(log_id)),
@@ -169,3 +170,28 @@ class BaseService():
             return None, 'enemy: %s not exist' % name
 
         return enemy_obj, ''
+
+    @classmethod
+    def test_task_async(cls):
+        from wcl_analysis.tasks import test_task
+        print("begin to call task")
+        test_task.apply_async(args=[], queue='wcl_analysis')
+        # test_task.delay()
+        print("end to call task")
+
+    @classmethod
+    def update_sync_flag(cls, log_id, task, flag):
+        '''
+        更新扫描任务处理状态
+        :param log_id:
+        :return:
+        '''
+        log_obj, msg = cls.get_wcl_log_by_id(log_id=log_id)
+        if not log_obj:
+            return False, msg
+
+        scan_flag = json.loads(log_obj.scan_flag)
+        scan_flag[task] = flag
+        log_obj.scan_flag = json.dumps(scan_flag)
+        log_obj.save()
+        return True, ''

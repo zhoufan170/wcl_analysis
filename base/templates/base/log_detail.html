@@ -2,9 +2,13 @@
 
 {% block content %}
 <h3>{{ log_name }}</h3>
-<div>
+<h3>
     <a href={{ log_url }}>wcl链接</a>
-</div>
+</h3>
+<h3>
+    <a type='button' class="label label-warning pull-left">启动全部任务(暂不可用)</a>
+    <a type='button' class="label label-success pull-right" href="{% url 'base:log_detail' log_id %}">刷新任务状态</a>
+</h3>
 
 {% if log_detail_list %}
 <table class="table">
@@ -18,13 +22,17 @@
     {% for log_detail in log_detail_list %}
     <tr>
         <td>{{ log_detail.detail_name }}</td>
-        {% if log_detail.scan_flag %}
+        {% if log_detail.scan_flag == 1 %}
         <td>已解读</td>
         <td><a class="btn btn-danger disabled" href={{ log_detail.detail_scan_url }} role="button">解读</a></td>
         <td><a class="btn btn-info" href={{ log_detail.detail_info_url }} role="button">查看</a></td>
-        {% else %}
+        {% elif log_detail.scan_flag == 0 %}
         <td>未解读</td>
         <td><a class="btn btn-danger" href={{ log_detail.detail_scan_url }} role="button">解读</a></td>
+        <td><a class="btn btn-info disabled" href={{ log_detail.detail_info_url }} role="button">查看</a></td>
+        {% else %}
+        <td>解读中</td>
+        <td><a class="btn btn-danger disabled" href={{ log_detail.detail_scan_url }} role="button">解读</a></td>
         <td><a class="btn btn-info disabled" href={{ log_detail.detail_info_url }} role="button">查看</a></td>
         {% endif %}
     </tr>

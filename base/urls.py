@@ -4,7 +4,7 @@ from base.views import load_report, log_detail, log_list, scan_viscidus_poison_t
     scan_boss_nature_protection, boss_nature_protection_info
 
 # namespace
-app_name = "file_upload"
+app_name = "base"
 
 urlpatterns = [
 

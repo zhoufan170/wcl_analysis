@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpResponseRedirect
 from base.form import LoadReportForm
 from service.base_service import BaseService
 from base.models import WCLLog
@@ -6,6 +7,7 @@ from service.constant import CONSTANT_SERVICE
 import json
 from service.taq_service import TaqService
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from wcl_analysis.tasks import viscidus_poison_tick_task, boss_nature_protection_task
 
 # Create your views here.
 
@@ -61,15 +63,18 @@ def scan_viscidus_poison_tick(request, *args, **kwargs):
             # 已经做过了小软毒箭解析，跳转日志详情页面（暂时还没做，先跳转service首页）
             return redirect('/service/')
 
+    BaseService.update_sync_flag(log_id=log_id, task=CONSTANT_SERVICE.VISCIDUS_POISON_TICK_TASK, flag=-1)
     # 还没做过检测
-    success, msg = TaqService.viscidus_poison_tick(log_id=log_id)
-    if not success:
-        return render(request, 'base/error.html', {'error': msg})
-    scan_flag_dict[CONSTANT_SERVICE.VISCIDUS_POISON_TICK_TASK] = 1
-    log_obj.scan_flag = json.dumps(scan_flag_dict)
-    log_obj.save()
+    # success, msg = TaqService.viscidus_poison_tick(log_id=log_id)
+    # TaqService.viscidus_poison_tick.apply_async(args=[log_id])
+    viscidus_poison_tick_task.apply_async(args=[log_id], queue='wcl_analysis')
+    # scan_flag_dict[CONSTANT_SERVICE.VISCIDUS_POISON_TICK_TASK] = 1
+    # log_obj.scan_flag = json.dumps(scan_flag_dict)
+    # log_obj.save()
 
-    return redirect('/service/')
+    # return redirect('%s' % str(log_id))
+    return HttpResponseRedirect(reverse('base:log_detail', kwargs={"id": log_id}))
+    # return reverse(viewname=log_detail, kwargs={"id": log_id})
 
 
 def log_detail(request, *args, **kwargs):
@@ -80,6 +85,7 @@ def log_detail(request, *args, **kwargs):
 
     log_detail_list, msg = BaseService.get_log_detail_list_by_id(log_id=log_id)
     content = {
+        'log_id': log_id,
         'log_detail_list': log_detail_list,
         'log_name': log_obj.title,
         'log_url': log_obj.get_wcl_link()
@@ -108,15 +114,17 @@ def scan_boss_nature_protection(request, *args, **kwargs):
             # 已经做过了boss战自然抗检测，跳转日志详情页面（暂时还没做，先跳转service首页）
             return redirect('/service/')
 
+    BaseService.update_sync_flag(log_id=log_id, task=CONSTANT_SERVICE.BOSS_NATURE_PROTECTION, flag=-1)
     # 还没做过检测
-    success, msg = TaqService.nature_protection_summary(log_id=log_id)
-    if not success:
-        return render(request, 'base/error.html', {'error': msg})
-    scan_flag_dict[CONSTANT_SERVICE.BOSS_NATURE_PROTECTION] = 1
-    log_obj.scan_flag = json.dumps(scan_flag_dict)
-    log_obj.save()
+    # success, msg = TaqService.nature_protection_summary(log_id=log_id)
+    # if not success:
+    #     return render(request, 'base/error.html', {'error': msg})
+    boss_nature_protection_task.apply_async(args=[log_id], queue='wcl_analysis')
+    # scan_flag_dict[CONSTANT_SERVICE.BOSS_NATURE_PROTECTION] = 1
+    # log_obj.scan_flag = json.dumps(scan_flag_dict)
+    # log_obj.save()
 
-    return redirect('/service/')
+    return HttpResponseRedirect(reverse('base:log_detail', kwargs={"id": log_id}))
 
 
 def boss_nature_protection_info(request, *args, **kwargs):
