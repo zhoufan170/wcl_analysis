@@ -6,6 +6,16 @@
 <h3>
     <a href={{ gold_run_data.log.get_wcl_link }}>wcl链接</a>
 </h3>
+<div>
+    <h4>战士总工资：{{ gold_run_data.warrior_all }}</h4>
+    <h4>骑士总工资：{{ gold_run_data.paladin_all }}</h4>
+    <h4>猎人总工资：{{ gold_run_data.hunter_all }}</h4>
+    <h4>盗贼总工资：{{ gold_run_data.rogue_all }}</h4>
+    <h4>小德总工资：{{ gold_run_data.druid_all }}</h4>
+    <h4>法师总工资：{{ gold_run_data.mage_all }}</h4>
+    <h4>牧师总工资：{{ gold_run_data.priest_all }}</h4>
+    <h4>术士总工资：{{ gold_run_data.warlock_all }}</h4>
+</div>
 {% if gold_run_data.run_obj_list %}
     <div class="accordion" id="accordionExample">
       <div class="card">

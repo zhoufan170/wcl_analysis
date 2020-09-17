@@ -762,7 +762,7 @@ class Command(BaseCommand):
         for run_obj in run_obj_list:
             total_fee = total_fee + run_obj.all_fee()
 
-        base = round((total - total_fee) / count)
+        base = int((total - total_fee) / count)
 
         for run_obj in run_obj_list:
             run_obj.base_gold = base

@@ -147,7 +147,16 @@ def gold_run_detail(request, *args, **kwargs):
     if len(run_obj_list) < 1:
         return render(request, 'base/error.html', {'error': '没有分金明细数据'})
 
-    gold_run_data = GoldRunTemplateData(log=log_obj, run_obj_list=run_obj_list)
+    gold_run_data = GoldRunTemplateData(log=log_obj, run_obj_list=run_obj_list,
+                                        warrior_all=get_classic_all_salary(run_obj_list, 'Warrior'),
+                                        paladin_all=get_classic_all_salary(run_obj_list, 'Paladin'),
+                                        hunter_all=get_classic_all_salary(run_obj_list, 'Hunter'),
+                                        rogue_all=get_classic_all_salary(run_obj_list, 'Rogue'),
+                                        druid_all=get_classic_all_salary(run_obj_list, 'Druid'),
+                                        mage_all=get_classic_all_salary(run_obj_list, 'Mage'),
+                                        priest_all=get_classic_all_salary(run_obj_list, 'Priest'),
+                                        warlock_all=get_classic_all_salary(run_obj_list, 'Warlock'),
+                                        )
     content = {
         "gold_run_data": gold_run_data
     }
@@ -155,3 +164,8 @@ def gold_run_detail(request, *args, **kwargs):
     return render(request, 'base/gold_run_detail.html', content)
 
 
+def get_classic_all_salary(run_obj_list, classic):
+    all_salary = 0
+    for run_obj in run_obj_list.filter(classic__iexact=classic):
+        all_salary = all_salary + run_obj.total_gold
+    return all_salary
