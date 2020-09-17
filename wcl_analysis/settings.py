@@ -133,7 +133,7 @@ MEDIA_URL = '/media/'
 WCL_API_KEY = '9c1df9ffb7dabbf2651007275f1da40a'
 WCL_SCHEMA = 'https://cn.classic.warcraftlogs.com'
 
-SELF_SCHEMA = 'https://www.wclanalysis.site'
+SELF_SCHEMA = 'http://www.wclanalysis.site'
 
 DETAIL_LIST = [
     ["viscidus_poison_tick", '维度希斯毒箭伤害统计', "/scan_viscidus_poison_tick/", '/viscidus_poison_tick_info/'],
