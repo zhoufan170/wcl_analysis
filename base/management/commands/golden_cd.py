@@ -36,12 +36,13 @@ class Command(BaseCommand):
                 taqGoldRunDetail.save()
 
         tank_list = (conf['tank']['tank_list']).split('|')
+        titan_list = (conf['tank']['titan']).split('|')
         punishment = conf['punishment']
 
         jumper = conf['jumper']['jumper']
         hunter = conf['jumper']['hunter']
 
-        success, result = self.tank(tank_list=tank_list, log_obj=log_obj)
+        success, result = self.tank(tank_list=tank_list, titan_list=titan_list, log_obj=log_obj)
         if not success:
             print(result)
             return
@@ -68,7 +69,7 @@ class Command(BaseCommand):
 
         print('%s/service/gold_run_detail/%s' % (settings.SELF_SCHEMA, str(log_obj.id)))
 
-    def tank(self, tank_list, log_obj):
+    def tank(self, tank_list, titan_list, log_obj):
         tank_dict = dict()
         for tank in tank_list:
             tank_dict[tank] = 0
@@ -144,16 +145,16 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 默认active前2的坦克补贴泰坦
-        titan_dict = dict()
-
-        sort_list = sorted(tank_dict.items(), key=lambda d: d[1], reverse=True)
-        titan_dict[sort_list[0][0]] = 250
-        titan_dict[sort_list[1][0]] = 250
-        for key, value in titan_dict.items():
-            run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=key).first()
-            run_obj.titan = run_obj.titan + value
-            run_obj.tag = 'tank'
-            run_obj.save()
+        # titan_dict = dict()
+        #
+        # sort_list = sorted(tank_dict.items(), key=lambda d: d[1], reverse=True)
+        # titan_dict[sort_list[0][0]] = 250
+        # titan_dict[sort_list[1][0]] = 250
+        titan_run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj, name__in=titan_list)
+        if len(titan_run_obj_list) > 0:
+            for run_obj in titan_run_obj_list:
+                run_obj.titan = run_obj.titan + 250
+                run_obj.save()
 
         # 再找2个sst
         twins_fight = Fight.objects.filter(log=log_obj, name=CONSTANT_SERVICE.Twins_name, kill=True).first()
