@@ -80,3 +80,9 @@ class TemplateData():
         self.fight_name = fight_name
         self.kill = kill
         self.data = data
+
+
+class GoldRunTemplateData():
+    def __init__(self, log, run_obj_list):
+        self.log = log
+        self.run_obj_list = run_obj_list

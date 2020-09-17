@@ -88,6 +88,19 @@ class BaseService():
         return log_object, ''
 
     @classmethod
+    def get_wcl_log_by_code(cls, code):
+        '''
+        根据code获取日志对象
+        :param code:
+        :return:
+        '''
+        if not code or code == '':
+            return None, 'code is none'
+
+        log_object = WCLLog.objects.filter(code=code).first()
+        return log_object, ''
+
+    @classmethod
     def get_fight_list(cls, log_id, name):
         '''
         根据boss查找战斗列表
@@ -121,6 +134,20 @@ class BaseService():
             print(friendly_id, log_obj.id)
             return None, 'friendly not exist'
 
+        return friendly_obj, ''
+
+    @classmethod
+    def get_all_friendly_by_log(cls, log_id):
+        '''
+        查找一个日志中所有友方目标
+        :param log_id:
+        :return:
+        '''
+        log_obj, msg = cls.get_wcl_log_by_id(log_id=log_id)
+        if not log_obj:
+            return None, msg
+
+        friendly_obj = Friendly.objects.filter(log=log_obj)
         return friendly_obj, ''
 
     @classmethod

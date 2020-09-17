@@ -123,7 +123,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, "static"), ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # specify media root for user uploaded files,
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -131,6 +132,8 @@ MEDIA_URL = '/media/'
 
 WCL_API_KEY = '9c1df9ffb7dabbf2651007275f1da40a'
 WCL_SCHEMA = 'https://cn.classic.warcraftlogs.com'
+
+SELF_SCHEMA = 'https://www.wclanalysis.site'
 
 DETAIL_LIST = [
     ["viscidus_poison_tick", '维度希斯毒箭伤害统计', "/scan_viscidus_poison_tick/", '/viscidus_poison_tick_info/'],
@@ -143,3 +146,5 @@ TAQ_NATURE_PROTECTION_BOSS_LIST = [
     CONSTANT_SERVICE.Ouro_name,
     CONSTANT_SERVICE.Cthun_name,
 ]
+
+# AVAILABLE_TRASH_ID = [15252, 15249, 15250, 15246, 15247, 15725, 15334, 15728, 15984, 15726, 15233, 15230, 15240, 15235, 15236, 15667, 15630, 15802, 15264, 15311, 15277, 15262, 15312]

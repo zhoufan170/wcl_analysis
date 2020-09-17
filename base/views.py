@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponseRedirect
 from base.form import LoadReportForm
 from service.base_service import BaseService
-from base.models import WCLLog
+from base.models import WCLLog, GoldRunTemplateData
 from service.constant import CONSTANT_SERVICE
 import json
 from service.taq_service import TaqService
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from wcl_analysis.tasks import viscidus_poison_tick_task, boss_nature_protection_task
+from taq.models import TaqGoldRunDetail
 
 # Create your views here.
 
@@ -134,4 +135,23 @@ def boss_nature_protection_info(request, *args, **kwargs):
         "boss_nature_protection_list": boss_nature_protection_list
     }
     return render(request, 'base/boss_nature_protection.html', content)
+
+
+def gold_run_detail(request, *args, **kwargs):
+    log_id = kwargs.get("id")
+    log_obj, msg = BaseService.get_wcl_log_by_id(log_id=log_id)
+    if not log_obj:
+        return render(request, 'base/error.html', {'error': msg})
+
+    run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj).order_by('-tag')
+    if len(run_obj_list) < 1:
+        return render(request, 'base/error.html', {'error': '没有分金明细数据'})
+
+    gold_run_data = GoldRunTemplateData(log=log_obj, run_obj_list=run_obj_list)
+    content = {
+        "gold_run_data": gold_run_data
+    }
+
+    return render(request, 'base/gold_run_detail.html', content)
+
 

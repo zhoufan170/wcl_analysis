@@ -37,3 +37,69 @@ class BossNatureProtection(models.Model):
     major_nature_protection_cast = models.IntegerField()
     major_nature_protection_uptime = models.FloatField()
     importance = models.CharField(max_length=20, default='L3')
+
+
+# C帝金团分金明细
+class TaqGoldRunDetail(models.Model):
+    log = models.ForeignKey(WCLLog, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    classic = models.CharField(max_length=100)
+    tag = models.CharField(max_length=100)
+    titan = models.IntegerField(default=0)
+    tank = models.IntegerField(default=0)
+    heal_total = models.IntegerField(default=0)
+    heal_classic = models.IntegerField(default=0)
+    heal_boss = models.IntegerField(default=0)
+    dispel = models.IntegerField(default=0)
+    dps_total_melee = models.IntegerField(default=0)
+    dps_total_range = models.IntegerField(default=0)
+    dps_punishment = models.IntegerField(default=0)
+    dps_boss = models.IntegerField(default=0)
+    dps_qiraji_champion = models.IntegerField(default=0)
+    dps_qiraji_slayer = models.IntegerField(default=0)
+    dps_qiraji_mindslayer = models.IntegerField(default=0)
+    dps_obsidian_nullifier = models.IntegerField(default=0)
+    jumper = models.IntegerField(default=0)
+    other_punishment = models.IntegerField(default=0)
+    base_gold = models.IntegerField(default=0)
+    total_gold = models.IntegerField(default=0)
+
+    def reset(self):
+        self.tag = ''
+        self.titan = 0
+        self.tank = 0
+        self.heal_total = 0
+        self.heal_classic = 0
+        self.heal_boss = 0
+        self.dispel = 0
+        self.dps_total_melee = 0
+        self.dps_total_range = 0
+        self.dps_punishment = 0
+        self.dps_boss = 0
+        self.dps_qiraji_champion = 0
+        self.dps_qiraji_slayer = 0
+        self.dps_qiraji_mindslayer = 0
+        self.dps_obsidian_nullifier = 0
+        self.jumper = 0
+        self.other_punishment = 0
+        self.base_gold = 0
+        self.total_gold = 0
+        self.save()
+
+    def all_fee(self):
+        return self.titan \
+               + self.tank \
+               + self.heal_total \
+               + self.heal_classic \
+               + self.heal_boss \
+               + self.dispel \
+               + self.dps_total_melee \
+               + self.dps_total_range \
+               + self.dps_punishment \
+               + self.dps_boss \
+               + self.dps_qiraji_champion \
+               + self.dps_qiraji_slayer \
+               + self.dps_qiraji_mindslayer \
+               + self.dps_obsidian_nullifier \
+               + self.jumper \
+               + self.other_punishment
