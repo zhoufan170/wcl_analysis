@@ -81,11 +81,11 @@ class BaseService():
         if not log_id or log_id == 0:
             return None, 'log id is none or 0'
 
-        log_object = WCLLog.objects.filter(id=log_id).first()
+        log_object = WCLLog.objects.filter(id=log_id)
         if not log_object:
             return None, 'wcl log not exist'
 
-        return log_object, ''
+        return log_object.first(), ''
 
     @classmethod
     def get_wcl_log_by_code(cls, code):
@@ -97,8 +97,11 @@ class BaseService():
         if not code or code == '':
             return None, 'code is none'
 
-        log_object = WCLLog.objects.filter(code=code).first()
-        return log_object, ''
+        log_object = WCLLog.objects.filter(code=code)
+        if not log_object:
+            return None, 'wcl log not exist'
+
+        return log_object.first(), ''
 
     @classmethod
     def get_fight_list(cls, log_id, name):
