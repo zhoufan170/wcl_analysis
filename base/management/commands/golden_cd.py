@@ -582,7 +582,7 @@ class Command(BaseCommand):
         if jumper == '1':
             run_obj = TaqGoldRunDetail.objects.filter(name=hunter, log=log_obj).first()
             if run_obj:
-                run_obj.jumper = run_obj.jumper + 200
+                run_obj.jumper = run_obj.jumper + 100
                 run_obj.save()
             return True, ''
 

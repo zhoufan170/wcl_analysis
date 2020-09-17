@@ -23,7 +23,7 @@ class WclApiService():
                     url = '%s&%s=%s' % (url, str(key), str(params.get(key)))
 
         try:
-            print(url)
+            # print(url)
             response = requests.get(url=url)
             if response.status_code != 200:
                 if response.status_code == 400:

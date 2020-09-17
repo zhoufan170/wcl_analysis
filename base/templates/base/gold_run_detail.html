@@ -7,28 +7,110 @@
     <a href={{ gold_run_data.log.get_wcl_link }}>wcl链接</a>
 </h3>
 {% if gold_run_data.run_obj_list %}
-    <table class="table">
-        <tbody>
-            <tr>
-                <td>ID</td>
-                <td>职责</td>
-                <td>职业</td>
-                <td>底薪</td>
-                <td>奖励/处罚</td>
-                <td>总工资</td>
-            </tr>
-        {% for run_obj in gold_run_data.run_obj_list %}
-            <tr>
-                <td>{{ run_obj.name }}</td>
-                <td>{{ run_obj.tag }}</td>
-                <td>{{ run_obj.classic }}</td>
-                <td>{{ run_obj.base_gold }}</td>
-                <td>{{ run_obj.all_fee }}</td>
-                <td>{{ run_obj.total_gold }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+          <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+              <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse_summary" aria-expanded="false" aria-controls="collapseThree">
+                  工资汇总
+              </button>
+          </h2>
+        </div>
+      </div>
+      <div id="collapse_summary" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>ID</td>
+                        <td>职责</td>
+                        <td>职业</td>
+                        <td>底薪</td>
+                        <td>奖励/处罚</td>
+                        <td>总工资</td>
+                    </tr>
+                {% for run_obj in gold_run_data.run_obj_list %}
+                    <tr>
+                        <td>{{ run_obj.name }}</td>
+                        <td>{{ run_obj.tag }}</td>
+                        <td>{{ run_obj.classic }}</td>
+                        <td>{{ run_obj.base_gold }}</td>
+                        <td>{{ run_obj.all_fee }}</td>
+                        <td>{{ run_obj.total_gold }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+
+    <div class="accordion" id="accordionExample1">
+      <div class="card">
+          <div class="card-header" id="headingThree1">
+          <h2 class="mb-0">
+              <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse_detail" aria-expanded="false" aria-controls="collapseThree">
+                  补贴明细
+              </button>
+          </h2>
+        </div>
+      </div>
+      <div id="collapse_detail" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div class="card-body">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>ID</td>
+                        <td>职责</td>
+                        <td>职业</td>
+                        <td>泰坦</td>
+                        <td>坦克补助</td>
+                        <td>治疗全程</td>
+                        <td>治疗职业</td>
+                        <td>治疗BOSS</td>
+                        <td>驱散</td>
+                        <td>近战全程</td>
+                        <td>远程全程</td>
+                        <td>倒数前5罚款</td>
+                        <td>DPS BOSS</td>
+                        <td>其拉勇士</td>
+                        <td>其拉执行者</td>
+                        <td>其拉斩灵者</td>
+                        <td>黑曜石终结者</td>
+                        <td>跳怪猎人</td>
+                        <td>罚款</td>
+                        <td>总补贴/罚款</td>
+                    </tr>
+                {% for run_obj in gold_run_data.run_obj_list %}
+                    <tr>
+                        <td>{{ run_obj.name }}</td>
+                        <td>{{ run_obj.tag }}</td>
+                        <td>{{ run_obj.classic }}</td>
+                        <td>{{ run_obj.titan }}</td>
+                        <td>{{ run_obj.tank }}</td>
+                        <td>{{ run_obj.heal_total }}</td>
+                        <td>{{ run_obj.heal_classic }}</td>
+                        <td>{{ run_obj.heal_boss }}</td>
+                        <td>{{ run_obj.dispel }}</td>
+                        <td>{{ run_obj.dps_total_melee }}</td>
+                        <td>{{ run_obj.dps_total_range }}</td>
+                        <td>{{ run_obj.dps_punishment }}</td>
+                        <td>{{ run_obj.dps_boss }}</td>
+                        <td>{{ run_obj.dps_qiraji_champion }}</td>
+                        <td>{{ run_obj.dps_qiraji_slayer }}</td>
+                        <td>{{ run_obj.dps_qiraji_mindslayer }}</td>
+                        <td>{{ run_obj.dps_obsidian_nullifier }}</td>
+                        <td>{{ run_obj.jumper }}</td>
+                        <td>{{ run_obj.other_punishment }}</td>
+                        <td>{{ run_obj.all_fee }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+          </div>
+        </div>
+    </div>
+
 {% else %}
 <p>No Data yet. Please check .</p>
 {% endif %}
