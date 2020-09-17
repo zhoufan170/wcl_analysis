@@ -485,14 +485,15 @@ class Command(BaseCommand):
         entries = result.get('entries')
         for entry in entries:
             run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=entry.get('name')).first()
-            if run_obj.tag == 'melee':
-                total_dps_dict[entry.get('name')] = entry.get('total')
-                total_melee_dict[entry.get('name')] = entry.get('total')
-            elif run_obj.tag == 'range':
-                total_dps_dict[entry.get('name')] = entry.get('total')
-                total_range_dict[entry.get('name')] = entry.get('total')
-            else:
-                continue
+            if run_obj:
+                if run_obj.tag == 'melee':
+                    total_dps_dict[entry.get('name')] = entry.get('total')
+                    total_melee_dict[entry.get('name')] = entry.get('total')
+                elif run_obj.tag == 'range':
+                    total_dps_dict[entry.get('name')] = entry.get('total')
+                    total_range_dict[entry.get('name')] = entry.get('total')
+                else:
+                    continue
 
         # 近战前5
         sort_list = sorted(total_melee_dict.items(), key=lambda d: d[1], reverse=True)
