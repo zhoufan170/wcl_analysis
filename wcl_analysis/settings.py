@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'wcl_analysis.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': os.environ.get('WCL_MYSQL_DB'),  # Or path to database file if using sqlite3.
+        'USER': os.environ.get('WCL_MYSQL_USERNAME'),  # Not used with sqlite3.
+        'PASSWORD': os.environ.get('WCL_MYSQL_PASSWORD'),  # Not used with sqlite3.
+        'HOST': os.environ.get('WCL_MYSQL_HOST'),  # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
     }
 }
 
