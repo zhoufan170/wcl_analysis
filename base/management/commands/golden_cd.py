@@ -28,6 +28,14 @@ class Command(BaseCommand):
                 taq_run_detail.reset()
         else:
             friendlies, msg = BaseService.get_all_friendly_by_log(log_id=log_obj.id)
+            friendlies = friendlies.filter(type__in=['Warrior',
+                                                     'Druid',
+                                                     'Mage',
+                                                     'Hunter',
+                                                     'Warlock',
+                                                     'Rogue',
+                                                     'Priest',
+                                                     'Paladin'])
             for friendly in friendlies:
                 taqGoldRunDetail = TaqGoldRunDetail()
                 taqGoldRunDetail.log = log_obj

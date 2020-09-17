@@ -136,7 +136,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-WCL_API_KEY = os.environ.get('WCL_API_KEY')
+# WCL_API_KEY = os.environ.get('WCL_API_KEY')
+WCL_API_KEY = '9c1df9ffb7dabbf2651007275f1da40a'
 WCL_SCHEMA = 'https://cn.classic.warcraftlogs.com'
 
 SELF_SCHEMA = 'http://www.wclanalysis.site'
