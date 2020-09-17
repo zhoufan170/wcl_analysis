@@ -74,10 +74,11 @@ class Command(BaseCommand):
         if not success:
             print(result)
             return
-
+        print('分金计算完毕，明细如下：')
         print('%s/service/gold_run_detail/%s' % (settings.SELF_SCHEMA, str(log_obj.id)))
 
     def tank(self, tank_list, titan_list, log_obj):
+        print('开始根据坦克活跃度计算坦克补贴')
         tank_dict = dict()
         for tank in tank_list:
             tank_dict[tank] = 0
@@ -165,6 +166,7 @@ class Command(BaseCommand):
                 run_obj.save()
 
         # 再找2个sst
+        print('开始计算术士T补贴')
         twins_fight = Fight.objects.filter(log=log_obj, name=CONSTANT_SERVICE.Twins_name, kill=True).first()
         params = {
             'start': twins_fight.start,
@@ -201,6 +203,7 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 奥罗撒币哥
+        print('开始计算骑士T补贴')
         ouro_fight = Fight.objects.filter(log=log_obj, name=CONSTANT_SERVICE.Ouro_name, kill=True).first()
         params = {
             'start': ouro_fight.start,
@@ -235,6 +238,7 @@ class Command(BaseCommand):
         return True, ''
 
     def heal(self, log_obj):
+        print('开始计算全程治疗补贴')
         # 先计算全程治疗
         all_fight_list = Fight.objects.filter(log=log_obj).order_by('fight_id')
         if len(all_fight_list) == 0:
@@ -301,6 +305,7 @@ class Command(BaseCommand):
             run_obj.heal_total = run_obj.heal_total + 50
             run_obj.save()
 
+        print('开始计算治疗职业第一补贴')
         # 骑士第一
         sort_list = sorted(paladin_healing_dict.items(), key=lambda d: d[1], reverse=True)
         run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()
@@ -322,6 +327,7 @@ class Command(BaseCommand):
         run_obj.heal_classic = run_obj.heal_classic + 50
         run_obj.save()
 
+        print('开始计算BOSS战治疗补贴')
         # boss战斗治疗
         boss_fight_list = Fight.objects.filter(log=log_obj, boss__gt=1)
         boss_heal_dict = dict()
@@ -370,6 +376,7 @@ class Command(BaseCommand):
             run_obj.heal_boss = run_obj.heal_boss + 25
             run_obj.save()
 
+        print('开始计算驱散补贴')
         # 驱散
         params = {
             "start": start,
@@ -465,6 +472,7 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 全程dps
+        print('开始计算全程近战前5/远程前5/倒数前5补贴/罚款')
         total_dps_dict = dict()
         total_melee_dict = dict()
         total_range_dict = dict()
@@ -545,6 +553,7 @@ class Command(BaseCommand):
             run_obj.dps_punishment = run_obj.dps_punishment -25
             run_obj.save()
 
+        print('开始计算BOSS战DPS补贴')
         # boss dps
         boss_fight_list = Fight.objects.filter(log=log_obj, boss__gt=1)
         boss_dps_dict = dict()
@@ -592,6 +601,7 @@ class Command(BaseCommand):
 
         # 判断是否跳怪
         if jumper == '1':
+            print('开始计算跳怪猎人补贴补贴')
             run_obj = TaqGoldRunDetail.objects.filter(name=hunter, log=log_obj).first()
             if run_obj:
                 run_obj.jumper = run_obj.jumper + 100
@@ -600,6 +610,7 @@ class Command(BaseCommand):
 
         # 不跳怪，计算天堂路几个怪的dps
         # 其拉勇士
+        print('开始计算其拉勇士DPS补贴')
         qira_champion_dict = dict()
         enemy_obj = Enemy.objects.filter(log=log_obj, name='其拉勇士').first()
         if not enemy_obj:
@@ -639,6 +650,7 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 其拉执行者
+        print('开始计算其拉执行者DPS补贴')
         qira_slayer_dict = dict()
         enemy_obj = Enemy.objects.filter(log=log_obj, name='其拉执行者').first()
         if not enemy_obj:
@@ -678,6 +690,7 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 其拉斩灵者
+        print('开始计算其拉斩灵者DPS补贴')
         qira_mindslayer_dict = dict()
         enemy_obj = Enemy.objects.filter(log=log_obj, name='其拉斩灵者').first()
         if not enemy_obj:
@@ -717,6 +730,7 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 黑曜石终结者
+        print('开始计算黑曜石终结者DPS补贴')
         obsidian_nullifier_dict = dict()
         enemy_obj = Enemy.objects.filter(log=log_obj, name='黑曜石终结者').first()
         if not enemy_obj:
@@ -758,6 +772,7 @@ class Command(BaseCommand):
         return True, ''
 
     def punishment(self, log_obj, punishment_detail):
+        print('开始计算罚款')
         for key in punishment_detail:
             run_obj = TaqGoldRunDetail.objects.filter(name__iexact=key, log=log_obj).first()
             if run_obj:
@@ -767,6 +782,7 @@ class Command(BaseCommand):
         return True, ''
 
     def total_caculator(self, log_obj, total):
+        print('开始计算基本工资')
         run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj)
         count = len(run_obj_list)
         total_fee = 0
