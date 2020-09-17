@@ -492,6 +492,8 @@ class Command(BaseCommand):
                 elif run_obj.tag == 'range':
                     total_dps_dict[entry.get('name')] = entry.get('total')
                     total_range_dict[entry.get('name')] = entry.get('total')
+                elif run_obj.tag == 'tank':
+                    total_melee_dict[entry.get('name')] = entry.get('total')
                 else:
                     continue
 
