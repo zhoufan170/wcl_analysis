@@ -569,7 +569,7 @@ class Command(BaseCommand):
                 continue
 
             for entry in entries:
-                if entry.get("name") in total_dps_dict.keys():
+                if entry.get("name") in total_dps_dict.keys() or entry.get("name") in total_melee_dict.keys():
                     if entry.get("name") in boss_dps_dict.keys():
                         boss_dps_dict[entry.get("name")] = boss_dps_dict[entry.get("name")] + entry.get('total')
                     else:
