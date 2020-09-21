@@ -472,7 +472,7 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 全程dps
-        print('开始计算全程近战前5/远程前5/倒数前5补贴/罚款')
+        print('开始计算全程近战前5/远程前5补贴')
         total_dps_dict = dict()
         total_melee_dict = dict()
         total_range_dict = dict()
@@ -538,20 +538,20 @@ class Command(BaseCommand):
             run_obj.save()
 
         # 倒数前5罚款
-        sort_list = sorted(total_range_dict.items(), key=lambda d: d[1])
-        run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()
-        run_obj.dps_punishment = run_obj.dps_punishment - 100
-        run_obj.save()
-
-        run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj, name__in=[sort_list[1][0], sort_list[2][0]])
-        for run_obj in run_obj_list:
-            run_obj.dps_punishment = run_obj.dps_punishment - 50
-            run_obj.save()
-
-        run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj, name__in=[sort_list[3][0], sort_list[4][0]])
-        for run_obj in run_obj_list:
-            run_obj.dps_punishment = run_obj.dps_punishment -25
-            run_obj.save()
+        # sort_list = sorted(total_range_dict.items(), key=lambda d: d[1])
+        # run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()
+        # run_obj.dps_punishment = run_obj.dps_punishment - 100
+        # run_obj.save()
+        #
+        # run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj, name__in=[sort_list[1][0], sort_list[2][0]])
+        # for run_obj in run_obj_list:
+        #     run_obj.dps_punishment = run_obj.dps_punishment - 50
+        #     run_obj.save()
+        #
+        # run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj, name__in=[sort_list[3][0], sort_list[4][0]])
+        # for run_obj in run_obj_list:
+        #     run_obj.dps_punishment = run_obj.dps_punishment -25
+        #     run_obj.save()
 
         print('开始计算BOSS战DPS补贴')
         # boss dps
