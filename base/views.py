@@ -215,5 +215,5 @@ def get_all_dps_fee(run_obj_list):
 def get_all_other_fee(run_obj_list):
     all_other_fee = 0
     for run_obj in run_obj_list:
-        all_other_fee = run_obj.jumper + run_obj.other_punishment
+        all_other_fee = all_other_fee + run_obj.jumper + run_obj.other_punishment
     return all_other_fee
