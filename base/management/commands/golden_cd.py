@@ -12,8 +12,8 @@ class Command(BaseCommand):
     help = 'C帝金团分金工具'
 
     def handle(self, *args, **options):
-        # golden_config_file = '/home/wcl/C帝分金配置.txt'
-        golden_config_file = '/Users/zhoufan/C帝分金配置.txt'
+        golden_config_file = '/home/wcl/C帝分金配置.txt'
+        # golden_config_file = '/Users/zhoufan/C帝分金配置.txt'
         conf = configparser.ConfigParser()
         conf.read(golden_config_file)
         code = conf['log']['code']
