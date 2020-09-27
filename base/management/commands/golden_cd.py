@@ -23,7 +23,6 @@ class Command(BaseCommand):
             return
 
         ignore_list = (conf['ignore']['ignore_list']).split('|')
-        print(ignore_list)
 
         # 每次运行任务，重新生成一次数据，把以前的数据清理掉
         taq_run_detail_list = TaqGoldRunDetail.objects.filter(log=log_obj)
