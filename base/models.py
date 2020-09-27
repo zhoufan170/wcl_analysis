@@ -84,7 +84,8 @@ class TemplateData():
 
 class GoldRunTemplateData():
     def __init__(self, log, run_obj_list, warrior_all, paladin_all,
-                 hunter_all, rogue_all, druid_all, mage_all, priest_all, warlock_all):
+                 hunter_all, rogue_all, druid_all, mage_all, priest_all, warlock_all,
+                 tank_fee, heal_fee, dps_fee, other_fee):
         self.log = log
         self.run_obj_list = run_obj_list
         self.warrior_all = warrior_all
@@ -95,3 +96,7 @@ class GoldRunTemplateData():
         self.mage_all = mage_all
         self.priest_all = priest_all
         self.warlock_all = warlock_all
+        self.tank_fee = tank_fee
+        self.heal_fee = heal_fee
+        self.dps_fee = dps_fee
+        self.other_fee = other_fee

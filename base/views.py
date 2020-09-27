@@ -52,6 +52,20 @@ def log_list(request):
     return render(request, 'base/log_list.html', {'logs': contacts})
 
 
+def log_list_bt(request):
+    logs = WCLLog.objects.all().order_by("-id")
+    total = len(logs)
+    result = dict()
+    for log in logs:
+        result.append({
+            "code": log.code,
+            "title": log.title,
+            "total_time": log.total_time(),
+            "upload_time": log.format_upload_time()
+        })
+
+
+
 def scan_viscidus_poison_tick(request, *args, **kwargs):
     log_id = kwargs.get("log_id")
     log_obj, msg = BaseService.get_wcl_log_by_id(log_id=log_id)
@@ -143,7 +157,7 @@ def gold_run_detail(request, *args, **kwargs):
     if not log_obj:
         return render(request, 'base/error.html', {'error': msg})
 
-    run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj).order_by('-tag')
+    run_obj_list = TaqGoldRunDetail.objects.filter(log=log_obj).order_by('-classic')
     if len(run_obj_list) < 1:
         return render(request, 'base/error.html', {'error': '没有分金明细数据'})
 
@@ -156,6 +170,10 @@ def gold_run_detail(request, *args, **kwargs):
                                         mage_all=get_classic_all_salary(run_obj_list, 'Mage'),
                                         priest_all=get_classic_all_salary(run_obj_list, 'Priest'),
                                         warlock_all=get_classic_all_salary(run_obj_list, 'Warlock'),
+                                        tank_fee=get_all_tank_fee(run_obj_list),
+                                        heal_fee=get_all_heal_fee(run_obj_list),
+                                        dps_fee=get_all_dps_fee(run_obj_list),
+                                        other_fee=get_all_other_fee(run_obj_list)
                                         )
     content = {
         "gold_run_data": gold_run_data
@@ -169,3 +187,33 @@ def get_classic_all_salary(run_obj_list, classic):
     for run_obj in run_obj_list.filter(classic__iexact=classic):
         all_salary = all_salary + run_obj.total_gold
     return all_salary
+
+
+def get_all_tank_fee(run_obj_list):
+    all_tank_fee = 0
+    for run_obj in run_obj_list:
+        all_tank_fee = all_tank_fee + run_obj.tank + run_obj.titan
+    return all_tank_fee
+
+
+def get_all_heal_fee(run_obj_list):
+    all_heal_fee = 0
+    for run_obj in run_obj_list:
+        all_heal_fee = all_heal_fee + run_obj.heal_total + run_obj.heal_classic + run_obj.heal_boss + run_obj.dispel
+    return all_heal_fee
+
+
+def get_all_dps_fee(run_obj_list):
+    all_dps_fee = 0
+    for run_obj in run_obj_list:
+        all_dps_fee = all_dps_fee + run_obj.dps_total_melee + run_obj.dps_total_range + run_obj.dps_punishment + \
+            run_obj.dps_boss + run_obj.dps_qiraji_champion + run_obj.dps_qiraji_slayer + \
+            run_obj.dps_qiraji_mindslayer + run_obj.dps_obsidian_nullifier
+    return all_dps_fee
+
+
+def get_all_other_fee(run_obj_list):
+    all_other_fee = 0
+    for run_obj in run_obj_list:
+        all_other_fee = run_obj.jumper + run_obj.other_punishment
+    return all_other_fee

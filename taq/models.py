@@ -103,3 +103,23 @@ class TaqGoldRunDetail(models.Model):
                + self.dps_obsidian_nullifier \
                + self.jumper \
                + self.other_punishment
+
+    def color_code(self):
+        if self.classic == 'Warrior':
+            return '#B8860B'
+        elif self.classic == 'Paladin':
+            return '#FF69B4'
+        elif self.classic == 'Hunter':
+            return '#9ACD32'
+        elif self.classic == 'Rogue':
+            return '#FFD700'
+        elif self.classic == 'Druid':
+            return '#FF8C00'
+        elif self.classic == 'Mage':
+            return '#00BFFF'
+        elif self.classic == 'Priest':
+            return '#FFFFFF'
+        elif self.classic == 'Warlock':
+            return '#7B68EE'
+        else:
+            return '#FF0000'

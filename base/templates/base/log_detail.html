@@ -11,14 +11,16 @@
 </h3>
 
 {% if log_detail_list %}
-<table class="table">
+<table data-toggle="table">
+    <thead>
+        <tr>
+            <td>项目</td>
+            <td>任务运行标志</td>
+            <td>运行解读任务</td>
+            <td>解读结果</td>
+        </tr>
+    </thead>
     <tbody>
-    <tr>
-        <td>项目</td>
-        <td>任务运行标志</td>
-        <td>运行解读任务</td>
-        <td>解读结果</td>
-    </tr>
     {% for log_detail in log_detail_list %}
     <tr>
         <td>{{ log_detail.detail_name }}</td>

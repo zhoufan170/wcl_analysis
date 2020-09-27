@@ -12,7 +12,8 @@ class Command(BaseCommand):
     help = 'C帝金团分金工具'
 
     def handle(self, *args, **options):
-        golden_config_file = '/home/wcl/C帝分金配置.txt'
+        # golden_config_file = '/home/wcl/C帝分金配置.txt'
+        golden_config_file = '/Users/zhoufan/C帝分金配置.txt'
         conf = configparser.ConfigParser()
         conf.read(golden_config_file)
         code = conf['log']['code']
@@ -21,22 +22,26 @@ class Command(BaseCommand):
             print('日志code错误或未登记')
             return
 
+        ignore_list = (conf['ignore']['ignore_list']).split('|')
+        print(ignore_list)
+
         # 每次运行任务，重新生成一次数据，把以前的数据清理掉
         taq_run_detail_list = TaqGoldRunDetail.objects.filter(log=log_obj)
         if len(taq_run_detail_list) > 0:
             for taq_run_detail in taq_run_detail_list:
-                taq_run_detail.reset()
-        else:
-            friendlies, msg = BaseService.get_all_friendly_by_log(log_id=log_obj.id)
-            friendlies = friendlies.filter(type__in=['Warrior',
-                                                     'Druid',
-                                                     'Mage',
-                                                     'Hunter',
-                                                     'Warlock',
-                                                     'Rogue',
-                                                     'Priest',
-                                                     'Paladin'])
-            for friendly in friendlies:
+                taq_run_detail.delete()
+
+        friendlies, msg = BaseService.get_all_friendly_by_log(log_id=log_obj.id)
+        friendlies = friendlies.filter(type__in=['Warrior',
+                                                 'Druid',
+                                                 'Mage',
+                                                 'Hunter',
+                                                 'Warlock',
+                                                 'Rogue',
+                                                 'Priest',
+                                                 'Paladin'])
+        for friendly in friendlies:
+            if friendly.name not in ignore_list:
                 taqGoldRunDetail = TaqGoldRunDetail()
                 taqGoldRunDetail.log = log_obj
                 taqGoldRunDetail.name = friendly.name
@@ -55,12 +60,12 @@ class Command(BaseCommand):
             print(result)
             return
 
-        success, result = self.heal(log_obj=log_obj)
+        success, result = self.heal(log_obj=log_obj, ignore_list=ignore_list)
         if not success:
             print(result)
             return
 
-        success, result = self.dps(log_obj=log_obj, jumper=jumper, hunter=hunter)
+        success, result = self.dps(log_obj=log_obj, jumper=jumper, hunter=hunter, ignore_list=ignore_list)
         if not success:
             print(result)
             return
@@ -147,6 +152,7 @@ class Command(BaseCommand):
             total_active = total_active + tank_dict[key]
 
         for key, value in tank_dict.items():
+            print(key, value)
             tank = round((tank_dict[key]/total_active) * 1200)
             run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=key).first()
             run_obj.tank = run_obj.tank + tank
@@ -237,7 +243,7 @@ class Command(BaseCommand):
 
         return True, ''
 
-    def heal(self, log_obj):
+    def heal(self, log_obj, ignore_list):
         print('开始计算全程治疗补贴')
         # 先计算全程治疗
         all_fight_list = Fight.objects.filter(log=log_obj).order_by('fight_id')
@@ -271,7 +277,7 @@ class Command(BaseCommand):
             return False, '没有有效的全程治疗数据'
 
         for entry in entries:
-            if entry.get('total') > 200000:
+            if entry.get('total') > 200000 and entry.get('name') not in ignore_list:
                 all_healing_dict[entry.get('name')] = entry.get('total')
                 if entry.get('type') == 'Paladin':
                     paladin_healing_dict[entry.get('name')] = entry.get('total')
@@ -406,10 +412,11 @@ class Command(BaseCommand):
                     continue
 
                 for detail in details:
-                    if detail.get("name") in all_dispel_dict.keys():
-                        all_dispel_dict[detail.get("name")] = all_dispel_dict[detail.get("name")] + detail.get('total')
-                    else:
-                        all_dispel_dict[detail.get("name")] = detail.get('total')
+                    if detail.get("name") not in ignore_list:
+                        if detail.get("name") in all_dispel_dict.keys():
+                            all_dispel_dict[detail.get("name")] = all_dispel_dict[detail.get("name")] + detail.get('total')
+                        else:
+                            all_dispel_dict[detail.get("name")] = detail.get('total')
 
         sort_list = sorted(all_dispel_dict.items(), key=lambda d: d[1], reverse=True)
         run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()
@@ -423,7 +430,7 @@ class Command(BaseCommand):
 
         return True, ''
 
-    def dps(self, log_obj, jumper, hunter):
+    def dps(self, log_obj, jumper, hunter, ignore_list):
         # 先打标
         all_fight_list = Fight.objects.filter(log=log_obj).order_by('fight_id')
         if len(all_fight_list) == 0:
@@ -637,7 +644,8 @@ class Command(BaseCommand):
             return False, '没有有效的其拉勇士战斗数据'
 
         for entry in entries:
-            qira_champion_dict[entry.get("name")] = entry.get('total')
+            if entry.get("name") not in ignore_list:
+                qira_champion_dict[entry.get("name")] = entry.get('total')
 
         sort_list = sorted(qira_champion_dict.items(), key=lambda d: d[1], reverse=True)
         run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()
@@ -677,7 +685,8 @@ class Command(BaseCommand):
             return False, '没有有效的其拉执行者战斗数据'
 
         for entry in entries:
-            qira_slayer_dict[entry.get("name")] = entry.get('total')
+            if entry.get("name") not in ignore_list:
+                qira_slayer_dict[entry.get("name")] = entry.get('total')
 
         sort_list = sorted(qira_slayer_dict.items(), key=lambda d: d[1], reverse=True)
         run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()
@@ -717,7 +726,8 @@ class Command(BaseCommand):
             return False, '没有有效的其拉斩灵者战斗数据'
 
         for entry in entries:
-            qira_mindslayer_dict[entry.get("name")] = entry.get('total')
+            if entry.get("name") not in ignore_list:
+                qira_mindslayer_dict[entry.get("name")] = entry.get('total')
 
         sort_list = sorted(qira_mindslayer_dict.items(), key=lambda d: d[1], reverse=True)
         run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()
@@ -757,7 +767,8 @@ class Command(BaseCommand):
             return False, '没有有效的黑曜石终结者战斗数据'
 
         for entry in entries:
-            obsidian_nullifier_dict[entry.get("name")] = entry.get('total')
+            if entry.get("name") not in ignore_list:
+                obsidian_nullifier_dict[entry.get("name")] = entry.get('total')
 
         sort_list = sorted(obsidian_nullifier_dict.items(), key=lambda d: d[1], reverse=True)
         run_obj = TaqGoldRunDetail.objects.filter(log=log_obj, name=sort_list[0][0]).first()

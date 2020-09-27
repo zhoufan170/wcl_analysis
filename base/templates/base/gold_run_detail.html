@@ -1,28 +1,95 @@
 {% extends "base/base.html" %}
 
 {% block content %}
-<h1>C帝金团分金明细</h1>
+<h1>腾腾杯·C帝金团分金明细</h1>
 
 <h3>
     <a href={{ gold_run_data.log.get_wcl_link }}>wcl链接</a>
 </h3>
+<div class="accordion" id="feeIntroduce">
+      <div class="card">
+          <div class="card-header" id="headingFour">
+          <h2 class="mb-0">
+              <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse_feeIntroduce" aria-expanded="false" aria-controls="collapseThree">
+                  补贴说明
+              </button>
+          </h2>
+        </div>
+      </div>
+      <div id="collapse_feeIntroduce" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div>
+            <h4>常规坦克：总金额1200，根据坦克WCL承受伤害活跃度比例分配</h4>
+            <h4>泰坦：250/瓶</h4>
+            <h4>天堂路骑士坦：100</h4>
+            <h4>术士坦：150x2</h4>
+            <h4>全程治疗量：前5 200 100 100 50 50</h4>
+            <h4>全程牧/德/骑治疗量第一：50x3</h4>
+            <h4>全程驱散：前3 100 50 50</h4>
+            <h4>BOSS治疗量：前5 100 50 50 25 25</h4>
+            <h4>全程近战伤害量：前5 200 100 100 50 50</h4>
+            <h4>全程远程伤害量：前5 200 100 100 50 50</h4>
+            <h4>BOSS伤害量：前5 100 50 50 25 25</h4>
+            <h4>其拉勇士伤害量：前3 50 25 25</h4>
+            <h4>其拉执行者伤害量：前5 100 50 50</h4>
+            <h4>其拉斩灵者伤害量：前3 50 25 25</h4>
+            <h4>黑曜石终结者伤害量：前3 50 25 25</h4>
+            <h4>毒囊费用：打一次小软2000，团长先行垫付</h4>
+          </div>
+        </div>
+    </div>
 <div>
-    <h4>战士总工资：{{ gold_run_data.warrior_all }}</h4>
-    <h4>骑士总工资：{{ gold_run_data.paladin_all }}</h4>
-    <h4>猎人总工资：{{ gold_run_data.hunter_all }}</h4>
-    <h4>盗贼总工资：{{ gold_run_data.rogue_all }}</h4>
-    <h4>小德总工资：{{ gold_run_data.druid_all }}</h4>
-    <h4>法师总工资：{{ gold_run_data.mage_all }}</h4>
-    <h4>牧师总工资：{{ gold_run_data.priest_all }}</h4>
-    <h4>术士总工资：{{ gold_run_data.warlock_all }}</h4>
-</div>
+<div class="accordion" id="classicSummary">
+      <div class="card">
+          <div class="card-header" id="headingFive">
+          <h2 class="mb-0">
+              <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse_classicSummary" aria-expanded="false" aria-controls="collapseThree">
+                  工资汇总
+              </button>
+          </h2>
+        </div>
+      </div>
+      <div id="collapse_classicSummary" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div>
+            <h4 style="color:#B8860B">战士总工资：{{ gold_run_data.warrior_all }}</h4>
+            <h4 style="color:#FF69B4">骑士总工资：{{ gold_run_data.paladin_all }}</h4>
+            <h4 style="color:#9ACD32">猎人总工资：{{ gold_run_data.hunter_all }}</h4>
+            <h4 style="color:#FFD700">盗贼总工资：{{ gold_run_data.rogue_all }}</h4>
+            <h4 style="color:#FF8C00">小德总工资：{{ gold_run_data.druid_all }}</h4>
+            <h4 style="color:#00BFFF">法师总工资：{{ gold_run_data.mage_all }}</h4>
+            <h4 style="color:#FFFFFF">牧师总工资：{{ gold_run_data.priest_all }}</h4>
+            <h4 style="color:#7B68EE">术士总工资：{{ gold_run_data.warlock_all }}</h4>
+          </div>
+        </div>
+    </div>
+
+<div class="accordion" id="feeSummary">
+      <div class="card">
+          <div class="card-header" id="headingSix">
+          <h2 class="mb-0">
+              <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse_feeSummary" aria-expanded="false" aria-controls="collapseThree">
+                  补贴汇总
+              </button>
+          </h2>
+        </div>
+      </div>
+      <div id="collapse_feeSummary" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div>
+            <h4 style="color:#FF0000">坦克总补贴：{{ gold_run_data.tank_fee }}</h4>
+            <h4 style="color:#00FF00">治疗总补贴：{{ gold_run_data.heal_fee }}</h4>
+            <h4 style="color:#0000FF">输出总补贴：{{ gold_run_data.dps_fee }}</h4>
+            <h4 style="color:#FF00FF">其他补贴/罚款：{{ gold_run_data.other_fee }}</h4>
+
+          </div>
+        </div>
+    </div>
+
 {% if gold_run_data.run_obj_list %}
     <div class="accordion" id="accordionExample">
       <div class="card">
           <div class="card-header" id="headingThree">
           <h2 class="mb-0">
               <button class="btn btn-link collapsed btn-lg" type="button" data-toggle="collapse" data-target="#collapse_summary" aria-expanded="false" aria-controls="collapseThree">
-                  工资汇总
+                  工资明细
               </button>
           </h2>
         </div>
@@ -30,7 +97,7 @@
       <div id="collapse_summary" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
           <div class="card-body">
             <table class="table">
-                <tbody>
+                <thead>
                     <tr>
                         <td>ID</td>
                         <td>职责</td>
@@ -39,8 +106,10 @@
                         <td>奖励/处罚</td>
                         <td>总工资</td>
                     </tr>
+                </thead>
                 {% for run_obj in gold_run_data.run_obj_list %}
-                    <tr>
+                <tbody>
+                    <tr bgcolor="{{ run_obj.color_code }}">
                         <td>{{ run_obj.name }}</td>
                         <td>{{ run_obj.tag }}</td>
                         <td>{{ run_obj.classic }}</td>
@@ -68,7 +137,7 @@
       <div id="collapse_detail" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
           <div class="card-body">
             <table class="table">
-                <tbody>
+                <thead>
                     <tr>
                         <td>ID</td>
                         <td>职责</td>
@@ -90,8 +159,10 @@
                         <td>其他奖励/罚款</td>
                         <td>总补贴/罚款</td>
                     </tr>
+                </thead>
                 {% for run_obj in gold_run_data.run_obj_list %}
-                    <tr>
+                <tbody>
+                    <tr bgcolor="{{ run_obj.color_code }}">
                         <td>{{ run_obj.name }}</td>
                         <td>{{ run_obj.tag }}</td>
                         <td>{{ run_obj.classic }}</td>

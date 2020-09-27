@@ -24,7 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '1ai#)@_az=1a-zwtlq4e4#m#@*^84w#qp&!r+7&822ns_6^70d'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+if os.environ.get('ENV', 'TEST') == 'PRD':
+    DEBUG = False
+else:
+    DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'www.wclanalysis.site']
 
@@ -80,16 +83,24 @@ WSGI_APPLICATION = 'wcl_analysis.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': os.environ.get('WCL_MYSQL_DB'),  # Or path to database file if using sqlite3.
-        'USER': os.environ.get('WCL_MYSQL_USERNAME'),  # Not used with sqlite3.
-        'PASSWORD': os.environ.get('WCL_MYSQL_PASSWORD'),  # Not used with sqlite3.
-        'HOST': os.environ.get('WCL_MYSQL_HOST'),  # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
+if os.environ.get('ENV', 'TEST') == 'PRD':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': os.environ.get('WCL_MYSQL_DB'),  # Or path to database file if using sqlite3.
+            'USER': os.environ.get('WCL_MYSQL_USERNAME'),  # Not used with sqlite3.
+            'PASSWORD': os.environ.get('WCL_MYSQL_PASSWORD'),  # Not used with sqlite3.
+            'HOST': os.environ.get('WCL_MYSQL_HOST'),  # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '3306',  # Set to empty string for default. Not used with sqlite3.
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 
 # Password validation
