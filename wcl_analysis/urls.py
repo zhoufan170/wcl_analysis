@@ -23,4 +23,6 @@ urlpatterns = [
     # path('file/', include("file_upload.urls")),
     # path('file/', include("file_download.urls")),
     path('service/', include("base.urls")),
+    path('api', include("api.urls")),
+    path('api/taq', include("taq.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

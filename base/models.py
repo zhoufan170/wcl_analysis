@@ -8,6 +8,7 @@ class WCLLog(models.Model):
     title = models.CharField(default="wcl log", max_length=100, verbose_name="标题")
     code = models.CharField(default="wcl_code", unique=True, max_length=50, verbose_name="wcl report code")
     owner = models.CharField(default="xlinna", max_length=50, verbose_name="owner")
+    raid = models.CharField(default='TAQ', max_length=50, verbose_name='副本')
     start = models.IntegerField(default=0, verbose_name="开始时间（timestamp毫秒）")
     end = models.IntegerField(default=0, verbose_name="结束时间（timestamp毫秒）")
     zone = models.IntegerField(default=0, verbose_name="区域")

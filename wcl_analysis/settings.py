@@ -43,21 +43,60 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'file_upload',
     'file_download',
     'taq',
     'base',
+    'api',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'utils.csrfTokenMiddleware.CsrfTokenMiddleware'
+    # 'service.api_permission.ApiPermissionCheck',
 ]
+
+# SESSION_COOKIE_SECURE = True
+
+# CSRF_TRUSTED_ORIGINS = ["http://localhost:9527", "http://127.0.0.1:9527"]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:9527",
+    "http://127.0.0.1:9527"
+]
+
+CORS_ALLOW_METHODS = (
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+    'VIEW',
+)
+
+CORS_ALLOW_HEADERS = (
+    'XMLHttpRequest',
+    'X_FILENAME',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'Pragma',
+    'x-token',
+)
 
 ROOT_URLCONF = 'wcl_analysis.urls'
 
@@ -152,10 +191,15 @@ WCL_SCHEMA = 'https://cn.classic.warcraftlogs.com'
 
 SELF_SCHEMA = 'https://www.wclanalysis.site'
 
-DETAIL_LIST = [
+TAQ_DETAIL_LIST = [
     ["viscidus_poison_tick", '维度希斯毒箭伤害统计', "/scan_viscidus_poison_tick/", '/viscidus_poison_tick_info/'],
     ["boss_nature_protection", 'BOSS战自然防护药水破案', "/scan_boss_nature_protection/", '/boss_nature_protection_info/'],
 ]
+
+NAXX_DETAIL_LIST = [
+
+]
+
 
 TAQ_NATURE_PROTECTION_BOSS_LIST = [
     CONSTANT_SERVICE.Viscidus_name,

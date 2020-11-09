@@ -7,7 +7,8 @@ from service.constant import CONSTANT_SERVICE
 import json
 from service.taq_service import TaqService
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from wcl_analysis.tasks import viscidus_poison_tick_task, boss_nature_protection_task
+# from wcl_analysis.tasks import viscidus_poison_tick_task, boss_nature_protection_task
+import wcl_analysis.tasks
 from taq.models import TaqGoldRunDetail
 
 # Create your views here.
@@ -65,7 +66,6 @@ def log_list_bt(request):
         })
 
 
-
 def scan_viscidus_poison_tick(request, *args, **kwargs):
     log_id = kwargs.get("log_id")
     log_obj, msg = BaseService.get_wcl_log_by_id(log_id=log_id)
@@ -82,7 +82,9 @@ def scan_viscidus_poison_tick(request, *args, **kwargs):
     # 还没做过检测
     # success, msg = TaqService.viscidus_poison_tick(log_id=log_id)
     # TaqService.viscidus_poison_tick.apply_async(args=[log_id])
-    viscidus_poison_tick_task.apply_async(args=[log_id], queue='wcl_analysis')
+
+    wcl_analysis.tasks.viscidus_poison_tick_task.apply_async(args=[log_id], queue='wcl_analysis')
+    # viscidus_poison_tick_task.apply_async(args=[log_id], queue='wcl_analysis')
     # scan_flag_dict[CONSTANT_SERVICE.VISCIDUS_POISON_TICK_TASK] = 1
     # log_obj.scan_flag = json.dumps(scan_flag_dict)
     # log_obj.save()

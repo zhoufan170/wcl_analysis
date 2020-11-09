@@ -3,6 +3,11 @@ from service.constant import CONSTANT_SERVICE
 from base.models import WCLLog, Fight, Friendly, Enemy, LogDetail
 from django.conf import settings
 import json
+from django.db.models import Q
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import time
+# 这里没有引用的"wcl_analysis.tasks"不能注释掉,因为调用celery任务用到exec(func_str)，func_str里有这个引用
+import wcl_analysis.tasks
 
 
 class BaseService():
@@ -10,7 +15,7 @@ class BaseService():
         pass
 
     @classmethod
-    def load_fight_data(cls, code):
+    def load_fight_data(cls, code, raid):
         """
         加载日志，fight数据
         :param code:
@@ -26,6 +31,7 @@ class BaseService():
         wcl_log = WCLLog()
         wcl_log.title = result.get("title", "")
         wcl_log.code = code
+        wcl_log.raid = raid
         wcl_log.owner = result.get("owner", "")
         wcl_log.start = result.get("start", 0)
         wcl_log.end = result.get("end", 0)
@@ -160,7 +166,7 @@ class BaseService():
             return None, msg
 
         log_detail_list = list()
-        for detail in settings.DETAIL_LIST:
+        for detail in settings.TAQ_DETAIL_LIST:
             detail_type = detail[0]
             detail_name = detail[1]
             detail_scan_url = detail[2]
@@ -182,6 +188,49 @@ class BaseService():
             log_detail_list.append(log_detail)
 
         return log_detail_list, ''
+
+    @classmethod
+    def get_log_detail_list_by_id_for_api(cls, log_id):
+        '''
+        用于新版api
+        :param log_id:
+        :return:
+        '''
+        log_obj, msg = cls.get_wcl_log_by_id(log_id=log_id)
+        if not log_obj:
+            return None, msg
+
+        if log_obj.raid == 'TAQ':
+            detail_list = settings.TAQ_DETAIL_LIST
+        elif log_obj.raid == 'NAXX':
+            detail_list = settings.NAXX_DETAIL_LIST
+        else:
+            return None, '暂时不支持%s' % log_obj.raid
+
+        log_detail_list = list()
+        for detail in detail_list:
+            detail_type = detail[0]
+            detail_name = detail[1]
+            scan_flag_dict = json.loads(log_obj.scan_flag)
+            if detail_type in scan_flag_dict.keys():
+                # if scan_flag_dict[detail_type] == 1:
+                #     scan_flag = True
+                # else:
+                #     scan_flag = False
+                scan_flag = scan_flag_dict[detail_type]
+            else:
+                scan_flag = 0
+
+            log_detail_list.append({
+                "type": detail_type,
+                "name": detail_name,
+                "scan_flag": scan_flag
+            })
+
+        return {"scan_list": log_detail_list, "raid": log_obj.raid, "code": log_obj.code,
+                "owner": log_obj.owner, "start": log_obj.start, "end": log_obj.end, "zone": log_obj.zone,
+                "upload_time": log_obj.format_upload_time(), "total": log_obj.total_time(),
+                "wcl_link": log_obj.get_wcl_link(), "title": log_obj.title}, ''
 
     @classmethod
     def get_enemy_by_name(cls, log_id, name):
@@ -225,3 +274,81 @@ class BaseService():
         log_obj.scan_flag = json.dumps(scan_flag)
         log_obj.save()
         return True, ''
+
+    @classmethod
+    def get_log_list(cls, raid, code, page, per_page):
+        if raid and code:
+            query_params = Q(raid=raid) & Q(code=code)
+        elif raid or code:
+            if raid:
+                query_params = Q(raid=raid)
+            else:
+                query_params = Q(code=code)
+        else:
+            query_params = None
+
+        if query_params:
+            log_list = WCLLog.objects.filter(query_params).order_by('-id')
+        else:
+            log_list = WCLLog.objects.all().order_by('-id')
+
+        paginator = Paginator(log_list, per_page)
+
+        try:
+            wcl_log_paginator = paginator.page(page)
+        except PageNotAnInteger:
+            wcl_log_paginator = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), deliver last page of results
+            wcl_log_paginator = paginator.page(paginator.num_pages)
+
+        wcl_log_list = wcl_log_paginator.object_list
+        wcl_log_restful_list = []
+        for wcl_log in wcl_log_list:
+            wcl_log_restful_list.append(dict(id=wcl_log.id,
+                                             title=wcl_log.title,
+                                             code=wcl_log.code,
+                                             raid=wcl_log.raid,
+                                             owner=wcl_log.owner,
+                                             start=wcl_log.start,
+                                             end=wcl_log.end,
+                                             zone=wcl_log.zone,
+                                             parse_flag=wcl_log.parse_flag,
+                                             upload_time=wcl_log.format_upload_time(),
+                                             scan_flag=wcl_log.scan_flag,
+                                             total=wcl_log.total_time(),
+                                             date=time.strftime('%Y-%m-%d', time.localtime(int(wcl_log.start / 1000))))
+                                        )
+
+        return wcl_log_restful_list, dict(per_page=int(per_page),
+                                          page=int(page) if int(page) <= paginator.count else paginator.count,
+                                          total=paginator.count)
+
+    @classmethod
+    def run_all_scan_task(cls, log_id):
+        log_obj, msg = cls.get_wcl_log_by_id(log_id=log_id)
+        if not log_obj:
+            return False, msg
+
+        scan_flag_dict = json.loads(log_obj.scan_flag)
+        if log_obj.raid == 'TAQ':
+            task_list = settings.TAQ_DETAIL_LIST
+        elif log_obj.raid == 'NAXX':
+            task_list = settings.NAXX_DETAIL_LIST
+        else:
+            return False, '暂时不支持%s' % log_obj.raid
+
+        for task in task_list:
+            if task[0] not in scan_flag_dict.keys() or scan_flag_dict.get(task[0]) != 1:
+                # 任务未运行
+                cls.run_single_task(log_id=log_id, task_name=task[0])
+            else:
+                continue
+
+        return True, ''
+
+    @classmethod
+    def run_single_task(cls, log_id, task_name):
+        BaseService.update_sync_flag(log_id=log_id, task=task_name, flag=-1)
+        func_str = "wcl_analysis.tasks.%s_task.apply_async(args=[%s], queue='wcl_analysis')" % (task_name, str(log_id))
+        exec(func_str)

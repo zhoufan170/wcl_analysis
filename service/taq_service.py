@@ -86,6 +86,75 @@ class TaqService():
         return viscidusPoisonTick_list, ''
 
     @classmethod
+    def get_viscidus_poison_tick_detail_api(cls, log_id):
+        log_obj, msg = BaseService.get_wcl_log_by_id(log_id=log_id)
+        if not log_obj:
+            return False, '', '日志不存在'
+
+        fight_list, msg = BaseService.get_fight_list(log_id=log_id, name=CONSTANT_SERVICE.Viscidus_name)
+        if not fight_list or len(fight_list) == 0:
+            return True, {}, 'no viscidus fight in this log'
+        print(len(fight_list))
+
+        viscidusPoisonTick_list = list()
+
+        for fight in fight_list:
+            tick_info_list = ViscidusPoisonTick.objects.filter(log=log_obj, fight=fight).order_by('-tick')
+            tick_info_dict = dict()
+            tick_info_dict['fight_id'] = fight.id
+            tick_info_dict['fight_name'] = fight.name
+            tick_info_dict['kill'] = fight.kill
+            tick_detail_list = list()
+            for tick_info in tick_info_list:
+                tick_detail_dict = dict()
+                tick_detail_dict['name'] = tick_info.name
+                tick_detail_dict['damage'] = tick_info.damage
+                tick_detail_dict['hit'] = tick_info.hit
+                tick_detail_dict['tick'] = tick_info.tick
+                tick_detail_dict['uptime'] = str(tick_info.uptime) + '%'
+                tick_detail_list.append(tick_detail_dict)
+            tick_info_dict['detail'] = tick_detail_list
+
+            viscidusPoisonTick_list.append(tick_info_dict)
+
+        return True, viscidusPoisonTick_list, ''
+
+    @classmethod
+    def get_boss_nature_protection_detail_api(cls, log_id):
+        log_obj, msg = BaseService.get_wcl_log_by_id(log_id=log_id)
+        if not log_obj:
+            return False, '', '日志不存在'
+
+        fight_list, msg = BaseService.get_fight_list(log_id=log_id, name=settings.TAQ_NATURE_PROTECTION_BOSS_LIST)
+        if not fight_list or len(fight_list) == 0:
+            return True, {}, 'no viscidus fight in this log'
+        print(len(fight_list))
+
+        bossNatureProtection_list = list()
+
+        for fight in fight_list:
+            nature_info_list = BossNatureProtection.objects.filter(log=log_obj, fight=fight).order_by('importance')
+            nature_info_dict = dict()
+            nature_info_dict['fight_id'] = fight.id
+            nature_info_dict['fight_name'] = fight.name
+            nature_info_dict['kill'] = fight.kill
+            nature_detail_list = list()
+            for nature_info in nature_info_list:
+                nature_detail_dict = dict()
+                nature_detail_dict['name'] = nature_info.name
+                nature_detail_dict['nature_protection_absorb'] = nature_info.nature_protection_absorb
+                nature_detail_dict['nature_protection_cast'] = nature_info.nature_protection_cast
+                nature_detail_dict['major_nature_protection_absorb'] = nature_info.major_nature_protection_absorb
+                nature_detail_dict['major_nature_protection_cast'] = nature_info.major_nature_protection_cast
+                nature_detail_dict['importance'] = nature_info.importance
+                nature_detail_list.append(nature_detail_dict)
+            nature_info_dict['detail'] = nature_detail_list
+
+            bossNatureProtection_list.append(nature_info_dict)
+
+        return True, bossNatureProtection_list, ''
+
+    @classmethod
     def nature_protection_summary(cls, log_id):
         for boss_name in settings.TAQ_NATURE_PROTECTION_BOSS_LIST:
             cls.boss_nature_protection_summary(log_id=log_id, boss_name=boss_name)
