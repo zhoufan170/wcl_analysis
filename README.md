@@ -1,7 +1,7 @@
 # WCL分析工具
 目前暂时只支持TAQ小软毒箭伤害的分析
 
-demo:https://www.wclanalysis.site/service/
+[demo](https://www.wclanalysis.site/service/)
 
 前端repo:[wcl_analysis_frontend](https://github.com/zhoufan170/wcl_analysis_frontend)
 
