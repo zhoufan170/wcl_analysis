@@ -3,6 +3,8 @@
 
 demo:https://www.wclanalysis.site/service/
 
+前端repo:[wcl_analysis_frontend](https://github.com/zhoufan170/wcl_analysis_frontend)
+
 使用步骤：
 
 1.上传你的wcl日志，输入日志的唯一编码code。目前仅支持简体中文客户端上传的日志。
